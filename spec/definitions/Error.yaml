@@ -22,5 +22,3 @@ example: |-
     "description": "Bad query parameter [$size]: Invalid integer value [abc]",
     "reasonPhrase": "Bad Request"
   }
-x-restlet:
-  section: Primeros pasos

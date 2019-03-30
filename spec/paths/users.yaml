@@ -59,5 +59,3 @@ post:
   responses:
     '201':
       description: Nuevo usuario creado
-x-restlet:
-  section: Usuarios
