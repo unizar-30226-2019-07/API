@@ -1,0 +1,63 @@
+get:
+  summary: Obtener lista de Usuarios
+  description: >-
+    Carga una lista con todos los usuarios registrados en la aplicación que
+    cumplen las condiciones.
+  produces:
+    - application/json
+  parameters:
+    - name: email
+      in: query
+      required: false
+      type: string
+      description: Correo electrónico del usuario.
+      x-example: johndoe@example.com
+    - name: $size
+      in: query
+      required: false
+      type: integer
+      description: Tamaño de la página.
+      minimum: 1
+      x-example: 10
+    - name: $page
+      in: query
+      required: false
+      type: integer
+      description: Número de página.
+      minimum: 1
+      x-example: 1
+    - name: $sort
+      in: query
+      required: false
+      type: string
+      description: Atributo(s) por los que ordenar.
+      x-example: birth_date DESC
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/Usuario'
+post:
+  summary: Crear nuevo Usuario
+  description: Añade un Usuario a la aplicación
+  consumes: []
+  parameters:
+    - name: body
+      in: body
+      required: true
+      schema:
+        $ref: '#/definitions/Usuario'
+      x-examples:
+        application/json: |-
+          {
+            "email": "johndoe@example.com",
+            "first_name": "John",
+            "password": "1234abcd",
+          }
+  responses:
+    '201':
+      description: Nuevo usuario creado
+x-restlet:
+  section: Usuarios

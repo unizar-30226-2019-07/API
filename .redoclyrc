@@ -1,0 +1,8 @@
+specFileName: /home/victor/openapi.yaml
+apiTitle: Selit! API
+splitSpec: true
+codeSamples: true
+swaggerUI: false
+travis: true
+repo: unizar-30226-2019-07/API
+oasVersion: '2.0'

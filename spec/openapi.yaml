@@ -1,0 +1,178 @@
+swagger: '2.0'
+info:
+  description: No description
+  version: 1.0.0
+  title: Selit!
+  contact: {}
+consumes:
+  - application/json
+produces:
+  - application/json
+x-restlet:
+  sections:
+    Primeros pasos:
+      description: Aspectos a considerar antes de interactuar con la API.
+    General: {}
+    Usuarios: {}
+  texts:
+    umtkgyq:
+      title: Descripción
+      content: >+
+        **Selit! API** es una interfaz basada en HTTP, creada para los
+        desarrolladores que deseen construir nuevas interfaces de aplicación
+        para Selit!.
+
+
+        La API se estructura en torno a los recursos disponibles dentro de la
+        apliación Selit!. La interacción con dichos recursos se realiza a través
+        de peticiones HTTP. Cada operación sobre un recurso puede requerir un
+        nivel de autenticación diferente.
+
+
+        # Recursos
+
+        Los recursos de la API se pueden clasificar según su comportamiento en
+        cuatro grupos.
+
+
+        | Nombre        | Comentario |
+
+        | ------------------- | ------------------- |
+
+        | Documento | Representación de un objeto o instancia. |
+
+        | Colección    | Conjunto de documentos manejado por el servidor. |
+
+        | Almacén      | Directorio de documentos manejado por el cliente. |
+
+        | Controlador | Procedimiento asociado a un documento. |
+
+
+        Los **Documentos** pueden contener **Colecciones**, así como
+        **Almacenes**, como parte de sus atributos. Cada **Documento** tiene
+        asociado un identificador único dentro de las **Colecciones** o
+        **Alamacenes** a los que pertenezca.
+
+
+        Los principales recursos de tipo **Documento** son los siguientes.
+
+
+        | Recurso    | Descripción |
+
+        | ---------------- | ------------------- | 
+
+        | Usuario     | Toda persona registrada en la aplicación. | 
+
+        | Anuncio    | Venta de un objeto mediante compra directa. |
+
+        | Subasta    | Venta de un objeto mediante pujas incrementales. |
+
+        | Chat          | Conversación entre dos usuarios en referencia a un
+        anuncio. |
+
+
+        # Operaciones
+
+        Las operaciones  sobre los recursos se realizan mediante peticiones
+        HTTP. La semántica de cada petición varía en función del tipo de
+        recurso.
+
+
+        | Petición      | Recurso      | Descripción |
+
+        | ----------------- | ------------------ | ------------------- |
+
+        | GET            | Documento | Obtener la inforación asociada a la
+        instancia. |
+
+        | GET            | Colección    | Lista de objetos que pertenecen al
+        recurso. |
+
+        | GET            | Almacén      | Lista de objetos que han sido añadidos
+        al recurso. |
+
+        | HEAD         | Documento | Comprueba la existencia de un recurso. |
+
+        | PUT            | Documento | Inserta o actualiza un documento (o parte
+        de un documento). |
+
+        | POST         | Colección    | Crea un nuevo recurso en la colección. |
+
+        | POST         | Controlador | Ejecuta el comportamiento asociado al
+        procedimiento. |
+
+        | DELETE     | Documento | Elimina el recurso de su padre. |
+
+        | OPTIONS  | *Todos*        | Devuelve la lista de posibles operaciones
+        sobre el recurso. |
+
+
+
+      section: Primeros pasos
+    64jfu1k:
+      title: Códigos de respuesta
+      content: >-
+        Las operaciones con recursos pueden ocasionar errores que serán
+        transmitidos en la respuesta a la petición HTTP.
+
+        # Código de éxito
+
+
+        | Código | Nombre                      | Descripción |
+
+        | ----------- | -------------------------------- | ------------------- |
+
+        | 200      | OK                                | Indica éxito genérico
+        en la operación. |
+
+        | 201      | Created                       | Indica que un nuevo recurso
+        ha sido creado (p. ej. en colecciones o almacenes). |
+
+        | 202      | Accepted                    | Indica el inicio de una
+        acción asíncrona (p. ej. en controladores). |
+
+        | 204      | No Content                | Indica que el cuerpo de la
+        respuesta está vacío de forma intencionada. |
+
+        | 301      | Moved Permanently | Indica que la URI solicitada ya no
+        corresponde con el recurso solicitado. |
+
+
+        # Códigos de fracaso
+
+        | Código | Nombre                       | Descripción |
+
+        | ----------- | --------------------------------- | -------------------
+        |
+
+        | 400      | Bad Request               | Indica un error genérico en la
+        operación. |
+
+        | 401      | Unauthorized              | Indica que los credenciales de
+        usuario son incorrectos o no han sido enviados. |
+
+        | 402      | Forbidden                    | Indica que el usuario
+        identificado no tiene permiso para realizar la operación. |
+
+        | 404      | Not Found                   | Indica que no se encontró el
+        recurso asociado con la URI. |
+
+        | 405      | Method Not Allowed | Indica que el método HTTP (petición)
+        no es válido sobre dicho recurso. |
+
+        | 409      | Conflict                        | Indica que la operación
+        ha sido rechazada porque violaba restricciones del estado del recurso. |
+
+        | 412      | Precondition Failed   | Indica incumplimiento de una de las
+        precondiciones de la operación. |
+
+        | 415      | Unsupported Media  | Indica que el formato multimedia no es
+        soportado por el servidor. |
+
+        | 500      | Internal Server Error  | Indica que el servidor de la API
+        está teniendo problemas ajenos a la petición. |
+
+
+        La mayoría de los códigos de error irán acompañados de una explicación
+        más detallada en el cuerpo de la respuesta.
+      section: Primeros pasos

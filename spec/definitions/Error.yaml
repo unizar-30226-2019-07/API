@@ -1,0 +1,26 @@
+type: object
+required:
+  - code
+properties:
+  code:
+    type: integer
+    description: Código HTTP de error
+    minimum: 400
+    maximum: 599
+  description:
+    type: string
+    description: Descripción detallada del error
+    example: 'Bad query parameter [$size]: Invalid integer value [abc]'
+  reasonPhrase:
+    type: string
+    description: Nombre del código de estado HTTP
+    example: Bad Request
+description: Estructura general de los errores de la API
+example: |-
+  {
+    "code": 400,
+    "description": "Bad query parameter [$size]: Invalid integer value [abc]",
+    "reasonPhrase": "Bad Request"
+  }
+x-restlet:
+  section: Primeros pasos
