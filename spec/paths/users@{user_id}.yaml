@@ -1,0 +1,76 @@
+get:
+  summary: Obtener un Usuario
+  description: Carga la información de un Usuario.
+  produces:
+    - application/json
+  parameters: []
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/Usuario'
+    '404':
+      description: No encontrado
+      schema:
+        $ref: '#/definitions/Error'
+      examples:
+        application/json: |-
+          {
+            "code": 404,
+            "description": "The user [user_id] does not exist.",
+            "reasonPhrase": "Not Found"
+          }
+put:
+  summary: Actualizar un Usuario
+  description: Modificar la información de un usuario preexistente.
+  produces:
+    - application/json
+  parameters: []
+  responses:
+    '200':
+      description: OK
+    '404':
+      description: No encontrado
+      schema:
+        $ref: '#/definitions/Error'
+      examples:
+        application/json: |-
+          {
+            "code": 404,
+            "description": "The user [user_id] does not exist.",
+            "reasonPhrase": "Not Found"
+          }
+    '409':
+      description: Conflicto
+      schema:
+        $ref: '#/definitions/Error'
+      examples:
+        application/json: |-
+          {
+            "code": 409,
+            "description": "The email [email] already exist.",
+            "reasonPhrase": "Conflict"
+          }
+delete:
+  summary: Eliminar un Usuario
+  description: Elimina la información de un usuario de la base de datos.
+  parameters: []
+  responses:
+    '200':
+      description: OK
+    '404':
+      description: No encontrado
+      schema:
+        $ref: '#/definitions/Error'
+      examples:
+        application/json: |-
+          {
+            "code": 404,
+            "description": "The user [user_id] does not exist.",
+            "reasonPhrase": "Not Found"
+          }
+parameters:
+  - name: user_id
+    in: path
+    required: true
+    type: string

@@ -1,0 +1,23 @@
+type: object
+required:
+  - lat
+  - lng
+properties:
+  lat:
+    type: number
+    description: Latitud
+    minimum: -90
+    maximum: 90
+    example: -34.397
+  lng:
+    type: number
+    description: Longitud
+    minimum: -180
+    maximum: 180
+    example: 150.644
+description: Ubicación geográfica.
+example: |-
+  {
+    "lat": -34.397,
+    "lng": 150.644
+  }

@@ -1,0 +1,10 @@
+swagger: '2.0'
+info:
+  description: No description
+  version: 1.0.0
+  title: Selit!
+  contact: {}
+consumes:
+  - application/json
+produces:
+  - application/json
