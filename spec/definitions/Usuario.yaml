@@ -53,7 +53,7 @@ properties:
   picture:
     $ref: '#/definitions/Imagen'
 description: Representación de un Usuario.
-example: |-
+example: 
   {
     "id": 345,
     "email": "johndoe@example.com",

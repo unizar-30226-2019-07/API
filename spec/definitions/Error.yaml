@@ -16,7 +16,7 @@ properties:
     description: Nombre del código de estado HTTP
     example: Bad Request
 description: Estructura general de los errores de la API
-example: |-
+example:
   {
     "code": 400,
     "description": "Bad query parameter [$size]: Invalid integer value [abc]",

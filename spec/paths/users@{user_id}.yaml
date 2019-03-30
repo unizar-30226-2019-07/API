@@ -1,4 +1,6 @@
 get:
+  tags:
+    - users
   summary: Obtener un Usuario
   description: Carga la información de un Usuario.
   produces:
@@ -14,13 +16,15 @@ get:
       schema:
         $ref: '#/definitions/Error'
       examples:
-        application/json: |-
+        application/json:
           {
             "code": 404,
             "description": "The user [user_id] does not exist.",
             "reasonPhrase": "Not Found"
           }
 put:
+  tags:
+    - users
   summary: Actualizar un Usuario
   description: Modificar la información de un usuario preexistente.
   produces:
@@ -34,7 +38,7 @@ put:
       schema:
         $ref: '#/definitions/Error'
       examples:
-        application/json: |-
+        application/json:
           {
             "code": 404,
             "description": "The user [user_id] does not exist.",
@@ -45,13 +49,15 @@ put:
       schema:
         $ref: '#/definitions/Error'
       examples:
-        application/json: |-
+        application/json:
           {
             "code": 409,
             "description": "The email [email] already exist.",
             "reasonPhrase": "Conflict"
           }
 delete:
+  tags:
+    - users
   summary: Eliminar un Usuario
   description: Elimina la información de un usuario de la base de datos.
   parameters: []
@@ -63,7 +69,7 @@ delete:
       schema:
         $ref: '#/definitions/Error'
       examples:
-        application/json: |-
+        application/json:
           {
             "code": 404,
             "description": "The user [user_id] does not exist.",

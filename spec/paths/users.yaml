@@ -1,4 +1,6 @@
 get:
+  tags:
+    - users
   summary: Obtener lista de Usuarios
   description: >-
     Carga una lista con todos los usuarios registrados en la aplicación que
@@ -40,6 +42,8 @@ get:
         items:
           $ref: '#/definitions/Usuario'
 post:
+  tags:
+    - users
   summary: Crear nuevo Usuario
   description: Añade un Usuario a la aplicación
   consumes: []
@@ -50,7 +54,7 @@ post:
       schema:
         $ref: '#/definitions/Usuario'
       x-examples:
-        application/json: |-
+        application/json:
           {
             "email": "johndoe@example.com",
             "first_name": "John",
