@@ -16,12 +16,6 @@ get:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          examples:
-            response:
-              value:
-                code: 404
-                description: 'The user [user_id] does not exist.'
-                reasonPhrase: Not Found
 put:
   tags:
     - users
@@ -42,24 +36,12 @@ put:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          examples:
-            response:
-              value:
-                code: 404
-                description: 'The user [user_id] does not exist.'
-                reasonPhrase: Not Found
     '409':
       description: Conflicto
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          examples:
-            response:
-              value:
-                code: 409
-                description: 'The email [email] already exist.'
-                reasonPhrase: Conflict
 delete:
   tags:
     - users
@@ -74,12 +56,6 @@ delete:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-          examples:
-            response:
-              value:
-                code: 404
-                description: 'The user [user_id] does not exist.'
-                reasonPhrase: Not Found
 parameters:
   - name: user_id
     in: path

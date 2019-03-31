@@ -1,22 +1,43 @@
 type: object
 required:
-  - code
+  - status
 properties:
-  code:
+  timestamp:
+    type: string
+    format: date-time
+    description: Hora del error
+    example: '2019-03-29T16:44:38.629+0000'
+  status:
     type: integer
     description: Código HTTP de error
     minimum: 400
     maximum: 599
-  description:
+  error:
+    type: string
+    enum:
+      - 'Bad Request'
+      - 'Unauthorized'
+      - 'Forbidden'
+      - 'Not Found'
+      - 'Method Not Allowed'
+      - 'Conflict'
+      - 'Precondition Failed'
+      - 'Unsupported Media'
+      - 'Internal Server Error'
+    description: Nombre del código de estado HTTP
+    example: 'Unauthorized'
+  message:
     type: string
     description: Descripción detallada del error
-    example: 'Bad query parameter [$size]: Invalid integer value [abc]'
-  reasonPhrase:
+    example: 'The user credentials does not exist.'
+  path:
     type: string
-    description: Nombre del código de estado HTTP
-    example: Bad Request
+    description: Ruta URI donde se produjo el error
+    example: '/users/8'
 description: Estructura general de los errores de la API
 example:
-  code: 400
-  description: 'Bad query parameter [$size]: Invalid integer value [abc]'
-  reasonPhrase: Bad Request
+  timestamp: '2019-03-29T16:44:38.629+0000'
+  status: 401
+  error: 'Unauthorized'
+  message: 'The user credentials does not exist.'
+  path: '/users/8'
