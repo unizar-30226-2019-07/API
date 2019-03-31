@@ -1,24 +1,28 @@
 type: object
 required:
+  - id
   - email
   - first_name
-  - id
+  - last_name
   - rating
-  - status
+  - password
 properties:
   id:
     type: integer
+    readOnly: true
     format: int32
     description: Identificador único
     minimum: 1
   email:
     type: string
     description: Correo electrónico
+    format: email
     maxLength: 254
     pattern: '[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'
     example: johndoe@example.com
   status:
     type: string
+    readOnly: true
     description: Estado de la cuenta
     enum:
       - active
@@ -46,12 +50,21 @@ properties:
     $ref: '#/definitions/Localizacion'
   rating:
     type: number
+    readOnly: true
     description: Valoración
     minimum: 0
     maximum: 5
     example: 2.75
   picture:
     $ref: '#/definitions/Imagen'
+  password:
+    type: string
+    writeOnly: true
+    format: password
+    description: Contraseña del usuario
+    minLength: 8
+    example: '1234abcd'
+
 description: Representación de un Usuario.
 example: 
   {
