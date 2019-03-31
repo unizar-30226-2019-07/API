@@ -5,61 +5,57 @@ get:
   description: >-
     Carga una lista con todos los usuarios registrados en la aplicación que
     cumplen las condiciones.
-  produces:
-    - application/json
   parameters:
     - name: email
       in: query
       required: false
-      type: string
       description: Correo electrónico del usuario.
-      x-example: johndoe@example.com
+      example: johndoe@example.com
+      schema:
+        type: string
     - name: $size
       in: query
       required: false
-      type: integer
       description: Tamaño de la página.
-      minimum: 1
-      x-example: 10
+      example: 10
+      schema:
+        type: integer
+        minimum: 1
     - name: $page
       in: query
       required: false
-      type: integer
       description: Número de página.
-      minimum: 1
-      x-example: 1
+      example: 1
+      schema:
+        type: integer
+        minimum: 1
     - name: $sort
       in: query
       required: false
-      type: string
       description: Atributo(s) por los que ordenar.
-      x-example: birth_date DESC
+      example: birth_date DESC
+      schema:
+        type: string
   responses:
     '200':
       description: OK
-      schema:
-        type: array
-        items:
-          $ref: '#/definitions/Usuario'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
 post:
   tags:
     - users
   summary: Crear nuevo Usuario
   description: Añade un Usuario a la aplicación
-  consumes: []
-  parameters:
-    - name: body
-      in: body
-      required: true
-      schema:
-        $ref: '#/definitions/Usuario'
-      x-examples:
-        application/json:
-          {
-            "email": "johndoe@example.com",
-            "first_name": "John",
-            "password": "1234abcd",
-          }
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/NewUser'
+    required: true
   responses:
     '201':
       description: Nuevo usuario creado

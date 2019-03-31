@@ -1,9 +1,4 @@
-swagger: '2.0'
-schemes:
-  - http
-  - https
-host: api.selit.ml
-basePath: /v1
+openapi: 3.0.0
 info:
   description: |
     [**Selit! API**](http://api.selit.ml) es una interfaz basada en HTTP, creada 
@@ -102,17 +97,13 @@ info:
   title: Selit! API
   contact:
     name: API Support
-    url: https://github.com/unizar-30226-2019-07/API
+    url: 'https://github.com/unizar-30226-2019-07/API'
   x-logo:
-    url: https://i.imgur.com/UTVJLgd.png
+    url: 'https://i.imgur.com/UTVJLgd.png'
     altText: Selit logo
   license:
     name: MIT License
     url: 'https://raw.githubusercontent.com/unizar-30226-2019-07/API/master/LICENSE'
-consumes:
-  - application/json
-produces:
-  - application/json
 tags:
   - name: login
     description: Gestion de sesiones de usuario
@@ -135,3 +126,6 @@ x-tagGroups:
   - name: Chat
     tags:
       - chats
+servers:
+  - url: 'http://api.selit.ml/v1'
+  - url: 'https://api.selit.ml/v1'

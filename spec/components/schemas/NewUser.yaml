@@ -1,0 +1,12 @@
+allOf:
+  - $ref: '#/components/schemas/User'
+  - type: object
+    required:
+      - password
+    properties:
+      password:
+        writeOnly: true
+        type: string
+        format: password
+        description: Contraseña de inicio de sesión
+        minLength: 8

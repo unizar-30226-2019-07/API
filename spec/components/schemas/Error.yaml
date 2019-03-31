@@ -17,8 +17,6 @@ properties:
     example: Bad Request
 description: Estructura general de los errores de la API
 example:
-  {
-    "code": 400,
-    "description": "Bad query parameter [$size]: Invalid integer value [abc]",
-    "reasonPhrase": "Bad Request"
-  }
+  code: 400
+  description: 'Bad query parameter [$size]: Invalid integer value [abc]'
+  reasonPhrase: Bad Request
