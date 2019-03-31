@@ -12,6 +12,7 @@ properties:
     description: Código HTTP de error
     minimum: 400
     maximum: 599
+    example: 401
   error:
     type: string
     enum:
@@ -35,9 +36,3 @@ properties:
     description: Ruta URI donde se produjo el error
     example: '/users/8'
 description: Estructura general de los errores de la API
-example:
-  timestamp: '2019-03-29T16:44:38.629+0000'
-  status: 401
-  error: 'Unauthorized'
-  message: 'The user credentials does not exist.'
-  path: '/users/8'

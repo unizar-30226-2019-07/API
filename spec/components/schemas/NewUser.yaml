@@ -10,3 +10,4 @@ allOf:
         format: password
         description: Contraseña de inicio de sesión
         minLength: 8
+        example: '1234abcd'

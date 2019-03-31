@@ -16,6 +16,3 @@ properties:
     maximum: 180
     example: 150.644
 description: Ubicación geográfica.
-example:
-  lat: -34.397
-  lng: 150.644
