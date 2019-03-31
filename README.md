@@ -1,5 +1,5 @@
 # Selit! API OpenAPI Specification
-[![Build Status](https://travis-ci.com/unizar-30226-2019-07/API.svg?branch=master)](https://travis-ci.com/unizar-30226-2019-07/API)
+[![Build Status](https://travis-ci.org/unizar-30226-2019-07/API.svg?branch=master)](https://travis-ci.org/unizar-30226-2019-07/API)
 ## Links
 
 - [Reference Documentation (ReDoc)](https://unizar-30226-2019-07.github.io/API/)
