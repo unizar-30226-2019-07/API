@@ -1,10 +1,8 @@
 type: object
 required:
-  - id
   - email
   - first_name
   - last_name
-  - rating
   - password
 properties:
   id:
@@ -59,12 +57,10 @@ properties:
     $ref: '#/definitions/Imagen'
   password:
     type: string
-    writeOnly: true
     format: password
     description: Contraseña del usuario
     minLength: 8
-    example: '1234abcd'
-
+    example: 1234abcd
 description: Representación de un Usuario.
 example: 
   {
