@@ -1104,14 +1104,14 @@
             "example": "Doe"
           },
           "gender": {
+            "nullable": true,
             "type": "string",
             "description": "Género",
             "enum": [
-              "male",
-              "female",
-              "other"
+              "hombre",
+              "mujer"
             ],
-            "example": "male"
+            "example": "mujer"
           },
           "birth_date": {
             "type": "string",

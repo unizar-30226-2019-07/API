@@ -848,13 +848,13 @@ components:
           description: Apellido(s)
           example: Doe
         gender:
+          nullable: true
           type: string
           description: Género
           enum:
-            - male
-            - female
-            - other
-          example: male
+            - hombre
+            - mujer
+          example: mujer
         birth_date:
           type: string
           format: date
