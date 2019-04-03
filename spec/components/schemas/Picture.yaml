@@ -1,8 +1,16 @@
 type: object
 required:
+  - id
   - base64
   - mime
 properties:
+  id:
+    readOnly: true
+    type: integer
+    format: int32
+    description: Identificador único
+    minimum: 1
+    example: 35749
   mime:
     type: string
     description: Tipo de dato MIME
