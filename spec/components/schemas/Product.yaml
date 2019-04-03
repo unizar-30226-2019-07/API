@@ -1,0 +1,61 @@
+type: object
+required:
+  - id
+  - type
+  - name
+  - description
+  - published
+  - location
+  - category
+properties:
+  id:
+    readOnly: true
+    type: integer
+    format: int32
+    description: Identificador único
+    minimum: 1
+    example: 1234
+  type:
+    type: string
+    description: Tipo de anuncio
+    enum:
+      - sale
+      - auction
+    example: 'sale'
+  title:
+    type: string
+    description: Descripción breve o nombre corto
+    minLength: 1
+    maxLength: 50
+    example: 'Renault R11 1.4 GTL'
+  owner:
+    $ref: '#/components/schemas/User'
+  description:
+    type: string
+    description: Descripción detallada.
+    example: 'Color gris/plata. Año 1986. 47000 km. El coche está en perfecto estado.'
+  published:
+    readOnly: true
+    type: string
+    format: date-time
+    description: Fecha de publicacaión (UTC)
+    pattern: "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    example: 2017-07-21T17:32:28Z
+  location:
+    $ref: '#/components/schemas/Location'
+  distance:
+    readOnly: true
+    type: integer
+    format: int32
+    description: Distancia lineal (en km) al punto de referencia.
+    minimum: 1
+  category:
+    type: string
+    description: Categoría a la que pertenece
+    example: 'Automoción'
+  media:
+    type: array
+    items:
+      $ref: '#/components/schemas/Picture'
+    description: Lista de imágenes. La primera imagen es la minuatura
+description: Representación de un Producto.

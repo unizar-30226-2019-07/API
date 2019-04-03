@@ -1,0 +1,21 @@
+type: object
+required:
+  - amount
+  - bidder
+  - date
+properties:
+  amount:
+    type: number
+    description: Cantidad ofrecida en la divisa de la subasta
+    minimum: 0
+    example: 1300
+  bidder:
+    $ref: '#/components/schemas/User'
+  date:
+    readOnly: true
+    type: string
+    format: date-time
+    description: Fecha y hora de la puja
+    pattern: "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    example: 2017-07-21T17:32:28Z
+description: Representación de una Puja

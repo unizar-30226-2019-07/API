@@ -1,0 +1,43 @@
+allOf:
+  - $ref: '#/components/schemas/Product'
+  - type: object
+    required:
+      - price
+      - currency
+      - status
+      - views
+      - likes
+    properties:
+      price:
+        type: number
+        description: Precio de venta
+        minimum: 0
+        example: 1500.00
+      currency:
+        type: string
+        description: Divisa en la que se expresa el precio
+        enum:
+          - EUR
+          - USD
+        example: 'EUR'
+      status:
+        readOnly: true
+        type: string
+        description: Estado de la venta
+        enum:
+          - on sale
+          - reserved
+          - sold
+      views:
+        readOnly: true
+        type: integer
+        format: int32
+        description: Número de vistas recibidas
+        minimum: 0
+        example: 54698
+      likes:
+        readOnly: true
+        type: integer
+        format: int32
+        description: Número de usuarios a los que les gusta
+        example: 315

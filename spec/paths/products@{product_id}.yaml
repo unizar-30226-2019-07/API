@@ -1,0 +1,81 @@
+get:
+  tags:
+    - products
+  summary: Obtener un Producto
+  description: Carga la información de un Producto.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Sale'
+              - $ref: '#/components/schemas/Auction'
+            discriminator:
+              propertyName: type
+              mapping:
+                sale: '#/components/schemas/Sale'
+                auction: '#/components/schemas/Auction'
+    '404':
+      description: No encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+put:
+  tags:
+    - products
+  summary: Actualizar un Producto
+  description: Modificar la información de un producto preexistente.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          oneOf:
+            - $ref: '#/components/schemas/Sale'
+            - $ref: '#/components/schemas/Auction'
+          discriminator:
+            propertyName: type
+            mapping:
+              sale: '#/components/schemas/Sale'
+              auction: '#/components/schemas/Auction'
+    required: true
+  responses:
+    '200':
+      description: OK
+    '404':
+      description: No encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    '409':
+      description: Conflicto
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+delete:
+  tags:
+    - products
+  summary: Eliminar un Producto
+  description: Elimina la información de un producto de la base de datos.
+  responses:
+    '200':
+      description: OK
+    '404':
+      description: No encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int32
+      description: Identificador único del producto
+      minimum: 1

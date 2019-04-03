@@ -1,0 +1,30 @@
+allOf:
+  - $ref: '#/components/schemas/Product'
+  - type: object
+    required:
+      - startPrice
+      - currency
+    properties:
+      startPrice:
+        type: number
+        description: Precio de salida
+        minimum: 0
+        example: 1000.00
+      currency:
+        type: string
+        description: Moneda en la que se expresa el precio
+        enum:
+          - EUR
+          - USD
+        example: 'EUR'
+      lastBid:
+        allOf:
+          - readOnly: true
+          - $ref: '#/components/schemas/Bid'
+      status:
+        readOnly: true
+        type: string
+        description: Estado de la subasta
+        enum:
+          - bidding
+          - awarded
