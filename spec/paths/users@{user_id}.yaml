@@ -61,4 +61,7 @@ parameters:
     in: path
     required: true
     schema:
-      type: string
+      type: integer
+      format: int32
+      description: Identificador único del usuario
+      minimum: 1
