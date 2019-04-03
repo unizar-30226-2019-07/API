@@ -70,6 +70,370 @@
     }
   ],
   "paths": {
+    "/products": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Obtener lista de Productos",
+        "description": "Carga una lista con todos los Productos registrados en la aplicación que cumplen las condiciones.",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "description": "Latitud del punto de referencia",
+            "example": -34.397,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "description": "Longitud del punto de referencia",
+            "example": 150.644,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          },
+          {
+            "name": "distance",
+            "in": "query",
+            "required": true,
+            "description": "Distancia lineal máxima (en km) al punto de referencia",
+            "example": 50,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "description": "Tipo(s) de Productos a mostrar",
+            "example": "?types=sale&types=auction",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sale",
+                  "auction"
+                ]
+              }
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Categoría en la que buscar",
+            "example": "Automoción",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "description": "Consulta por texto",
+            "example": "Teléfono Android",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priceFrom",
+            "in": "query",
+            "required": false,
+            "description": "Precio mínimo a mostrar",
+            "example": 1000,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "priceTo",
+            "in": "query",
+            "required": false,
+            "description": "Precio máximo a mostrar",
+            "example": 3500,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "publishedFrom",
+            "in": "query",
+            "required": false,
+            "description": "Fecha de publicación mínima a mostrar",
+            "example": "1970-01-01",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "publishedTo",
+            "in": "query",
+            "required": false,
+            "description": "Fecha de publicación máxima a mostrar",
+            "example": "1970-01-01",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "$size",
+            "in": "query",
+            "required": false,
+            "description": "Tamaño de la página.",
+            "example": 10,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "$page",
+            "in": "query",
+            "required": false,
+            "description": "Número de página.",
+            "example": 1,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "$sort",
+            "in": "query",
+            "required": false,
+            "description": "Atributo(s) por los que ordenar",
+            "example": "distance ASC, published DESC",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/Sale"
+                      },
+                      {
+                        "$ref": "#/components/schemas/Auction"
+                      }
+                    ],
+                    "discriminator": {
+                      "propertyName": "type",
+                      "mapping": {
+                        "sale": "#/components/schemas/Sale",
+                        "auction": "#/components/schemas/Auction"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Crear nuevo Producto",
+        "description": "Añade un Producto a la aplicación",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Sale"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Auction"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type",
+                  "mapping": {
+                    "sale": "#/components/schemas/Sale",
+                    "auction": "#/components/schemas/Auction"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Nuevo Producto creado"
+          }
+        }
+      }
+    },
+    "/products/{product_id}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Obtener un Producto",
+        "description": "Carga la información de un Producto.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Sale"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Auction"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "sale": "#/components/schemas/Sale",
+                      "auction": "#/components/schemas/Auction"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Actualizar un Producto",
+        "description": "Modificar la información de un producto preexistente.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Sale"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Auction"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "type",
+                  "mapping": {
+                    "sale": "#/components/schemas/Sale",
+                    "auction": "#/components/schemas/Auction"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflicto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Eliminar un Producto",
+        "description": "Elimina la información de un producto de la base de datos.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "No encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador único del producto",
+            "minimum": 1
+          }
+        }
+      ]
+    },
     "/users": {
       "get": {
         "tags": [
@@ -260,7 +624,10 @@
           "in": "path",
           "required": true,
           "schema": {
-            "type": "string"
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador único del usuario",
+            "minimum": 1
           }
         }
       ]
@@ -325,7 +692,10 @@
           "in": "path",
           "required": true,
           "schema": {
-            "type": "string"
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador único del usuario",
+            "minimum": 1
           }
         }
       ]
@@ -333,6 +703,84 @@
   },
   "components": {
     "schemas": {
+      "Auction": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Product"
+          },
+          {
+            "type": "object",
+            "required": [
+              "startPrice",
+              "currency"
+            ],
+            "properties": {
+              "startPrice": {
+                "type": "number",
+                "description": "Precio de salida",
+                "minimum": 0,
+                "example": 1000
+              },
+              "currency": {
+                "type": "string",
+                "description": "Moneda en la que se expresa el precio",
+                "enum": [
+                  "EUR",
+                  "USD"
+                ],
+                "example": "EUR"
+              },
+              "lastBid": {
+                "allOf": [
+                  {
+                    "readOnly": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/Bid"
+                  }
+                ]
+              },
+              "status": {
+                "readOnly": true,
+                "type": "string",
+                "description": "Estado de la subasta",
+                "enum": [
+                  "bidding",
+                  "awarded"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Bid": {
+        "type": "object",
+        "required": [
+          "amount",
+          "bidder",
+          "date"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "Cantidad ofrecida en la divisa de la subasta",
+            "minimum": 0,
+            "example": 1300
+          },
+          "bidder": {
+            "$ref": "#/components/schemas/User"
+          },
+          "date": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha y hora de la puja",
+            "pattern": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "example": "2017-07-21T17:32:28.000Z"
+          }
+        },
+        "description": "Representación de una Puja"
+      },
       "Error": {
         "type": "object",
         "required": [
@@ -431,10 +879,19 @@
       "Picture": {
         "type": "object",
         "required": [
+          "id",
           "base64",
           "mime"
         ],
         "properties": {
+          "id": {
+            "readOnly": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador único",
+            "minimum": 1,
+            "example": 35749
+          },
           "mime": {
             "type": "string",
             "description": "Tipo de dato MIME",
@@ -461,6 +918,142 @@
           }
         },
         "description": "Archivo multimedia de imagen."
+      },
+      "Product": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "name",
+          "description",
+          "published",
+          "location",
+          "category"
+        ],
+        "properties": {
+          "id": {
+            "readOnly": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "Identificador único",
+            "minimum": 1,
+            "example": 1234
+          },
+          "type": {
+            "type": "string",
+            "description": "Tipo de anuncio",
+            "enum": [
+              "sale",
+              "auction"
+            ],
+            "example": "sale"
+          },
+          "title": {
+            "type": "string",
+            "description": "Descripción breve o nombre corto",
+            "minLength": 1,
+            "maxLength": 50,
+            "example": "Renault R11 1.4 GTL"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/User"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripción detallada.",
+            "example": "Color gris/plata. Año 1986. 47000 km. El coche está en perfecto estado."
+          },
+          "published": {
+            "readOnly": true,
+            "type": "string",
+            "format": "date-time",
+            "description": "Fecha de publicacaión (UTC)",
+            "pattern": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "example": "2017-07-21T17:32:28.000Z"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "distance": {
+            "readOnly": true,
+            "type": "integer",
+            "format": "int32",
+            "description": "Distancia lineal (en km) al punto de referencia.",
+            "minimum": 1
+          },
+          "category": {
+            "type": "string",
+            "description": "Categoría a la que pertenece",
+            "example": "Automoción"
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Picture"
+            },
+            "description": "Lista de imágenes. La primera imagen es la minuatura"
+          }
+        },
+        "description": "Representación de un Producto."
+      },
+      "Sale": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Product"
+          },
+          {
+            "type": "object",
+            "required": [
+              "price",
+              "currency",
+              "status",
+              "views",
+              "likes"
+            ],
+            "properties": {
+              "price": {
+                "type": "number",
+                "description": "Precio de venta",
+                "minimum": 0,
+                "example": 1500
+              },
+              "currency": {
+                "type": "string",
+                "description": "Divisa en la que se expresa el precio",
+                "enum": [
+                  "EUR",
+                  "USD"
+                ],
+                "example": "EUR"
+              },
+              "status": {
+                "readOnly": true,
+                "type": "string",
+                "description": "Estado de la venta",
+                "enum": [
+                  "on sale",
+                  "reserved",
+                  "sold"
+                ]
+              },
+              "views": {
+                "readOnly": true,
+                "type": "integer",
+                "format": "int32",
+                "description": "Número de vistas recibidas",
+                "minimum": 0,
+                "example": 54698
+              },
+              "likes": {
+                "readOnly": true,
+                "type": "integer",
+                "format": "int32",
+                "description": "Número de usuarios a los que les gusta",
+                "example": 315
+              }
+            }
+          }
+        ]
       },
       "User": {
         "type": "object",
@@ -524,7 +1117,8 @@
             "type": "string",
             "format": "date",
             "description": "Fecha de nacimiento",
-            "example": "1970-01-01T00:00:00.000Z"
+            "pattern": "YYYY-MM-DD",
+            "example": "1970-01-01"
           },
           "location": {
             "$ref": "#/components/schemas/Location"
