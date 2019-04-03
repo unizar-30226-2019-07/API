@@ -50,7 +50,8 @@ properties:
     type: string
     format: date
     description: Fecha de nacimiento
-    example: 1970-01-01T00:00:00.000Z
+    pattern: 'YYYY-MM-DD'
+    example: '1970-01-01'
   location:
     $ref: '#/components/schemas/Location'
   rating:
