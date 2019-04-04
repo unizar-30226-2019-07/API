@@ -153,4 +153,22 @@ post:
     required: true
   responses:
     '201':
-      description: Nuevo Producto creado
+      description: Creado (nuevo producto creado)
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'

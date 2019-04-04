@@ -10,12 +10,33 @@ get:
         application/json:
           schema:
             $ref: '#/components/schemas/User'
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
     '404':
       description: No encontrado
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
 put:
   tags:
     - users
@@ -30,18 +51,33 @@ put:
   responses:
     '200':
       description: OK
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
     '404':
       description: No encontrado
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    '409':
-      description: Conflicto
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
 delete:
   tags:
     - users
@@ -50,12 +86,33 @@ delete:
   responses:
     '200':
       description: OK
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
     '404':
       description: No encontrado
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
 parameters:
   - name: user_id
     in: path

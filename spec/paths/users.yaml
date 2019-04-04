@@ -45,11 +45,30 @@ get:
             type: array
             items:
               $ref: '#/components/schemas/User'
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
 post:
   tags:
     - users
   summary: Crear nuevo Usuario
-  description: Añade un Usuario a la aplicación
+  description: Añade un Usuario a la aplicación. 
+               No es posible crear dos usuarios con el mismo email.
   requestBody:
     content:
       application/json:
@@ -58,4 +77,13 @@ post:
     required: true
   responses:
     '201':
-      description: Nuevo usuario creado
+      description: Creado (nuevo usuario creado)
+    '409':
+      description: Conflicto (email duplicado)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/409'

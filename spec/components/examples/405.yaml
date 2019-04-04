@@ -1,0 +1,6 @@
+summary: Method Not Allowed
+value:
+  timestamp: "2019-03-29T16:44:38.629+0000"
+  status: 405
+  error: "Method Not Allowed"
+  message: "The resource with given URI doesn't allow this HTTP method."

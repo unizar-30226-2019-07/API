@@ -1,0 +1,6 @@
+summary: Not Found
+value:
+  timestamp: "2019-03-29T16:44:38.629+0000"
+  status: 404
+  error: "Not Found"
+  message: "The resource with given URI doesn't exist."

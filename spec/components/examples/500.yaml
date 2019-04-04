@@ -1,0 +1,6 @@
+summary: Internal Server Error
+value:
+  timestamp: "2019-03-29T16:44:38.629+0000"
+  status: 500
+  error: "Internal Server Error"
+  message: "The API server is undergoing internal problems."

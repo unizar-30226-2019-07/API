@@ -1,0 +1,6 @@
+summary: Conflict
+value:
+  timestamp: "2019-03-29T16:44:38.629+0000"
+  status: 409
+  error: "Conflict"
+  message: "The operation has been rejected due to current resource state."

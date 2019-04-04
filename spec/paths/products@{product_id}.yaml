@@ -23,11 +23,15 @@ get:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
 put:
   tags:
     - products
   summary: Actualizar un Producto
-  description: Modificar la información de un producto preexistente.
+  description: Modificar la información de un producto preexistente. 
+               No es posible modificar productos vendidos.
   requestBody:
     content:
       application/json:
@@ -44,18 +48,42 @@ put:
   responses:
     '200':
       description: OK
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
     '404':
       description: No encontrado
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
     '409':
-      description: Conflicto
+      description: Conflicto (producto vendido)
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+              default:
+                $ref: '#/components/examples/409'
 delete:
   tags:
     - products
@@ -64,12 +92,33 @@ delete:
   responses:
     '200':
       description: OK
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
     '404':
       description: No encontrado
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
 parameters:
   - name: product_id
     in: path

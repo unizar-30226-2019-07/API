@@ -1,0 +1,6 @@
+summary: Bad Request
+value:
+  timestamp: "2019-03-29T16:44:38.629+0000"
+  status: 400
+  error: "Bad Request"
+  message: "Application unspecified error."
