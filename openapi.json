@@ -293,7 +293,37 @@
         },
         "responses": {
           "201": {
-            "description": "Nuevo Producto creado"
+            "description": "Creado (nuevo producto creado)"
+          },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -336,6 +366,11 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
@@ -347,7 +382,7 @@
           "products"
         ],
         "summary": "Actualizar un Producto",
-        "description": "Modificar la información de un producto preexistente.",
+        "description": "Modificar la información de un producto preexistente. No es posible modificar productos vendidos.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -376,22 +411,62 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
           },
           "409": {
-            "description": "Conflicto",
+            "description": "Conflicto (producto vendido)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/409"
+                  }
                 }
               }
             }
@@ -408,12 +483,47 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
@@ -498,6 +608,36 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -506,7 +646,7 @@
           "users"
         ],
         "summary": "Crear nuevo Usuario",
-        "description": "Añade un Usuario a la aplicación",
+        "description": "Añade un Usuario a la aplicación. No es posible crear dos usuarios con el mismo email.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -519,7 +659,22 @@
         },
         "responses": {
           "201": {
-            "description": "Nuevo usuario creado"
+            "description": "Creado (nuevo usuario creado)"
+          },
+          "409": {
+            "description": "Conflicto (email duplicado)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/409"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -542,12 +697,47 @@
               }
             }
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
@@ -574,22 +764,47 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflicto",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
@@ -606,12 +821,47 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
@@ -643,7 +893,7 @@
             "name": "old",
             "in": "query",
             "required": false,
-            "description": "Contraseña actual",
+            "description": "Contraseña actual (Precondición)",
             "example": "1234abcd",
             "schema": {
               "type": "string"
@@ -664,22 +914,62 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/401"
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Prohibido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/402"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No encontrado",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/404"
+                  }
                 }
               }
             }
           },
           "412": {
-            "description": "Precondición fallida",
+            "description": "Precondición fallida (contraseña actual incorrecta)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "default": {
+                    "$ref": "#/components/examples/412"
+                  }
                 }
               }
             }
@@ -1154,6 +1444,89 @@
           }
         },
         "description": "Representación de un Usuario."
+      }
+    },
+    "examples": {
+      "400": {
+        "summary": "Bad Request",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 400,
+          "error": "Bad Request",
+          "message": "Application unspecified error."
+        }
+      },
+      "401": {
+        "summary": "Unauthorized",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 401,
+          "error": "Unauthorized",
+          "message": "The user credentials does not exist."
+        }
+      },
+      "402": {
+        "summary": "Forbidden",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 402,
+          "error": "Forbidden",
+          "message": "The user doesn't have enough permissions."
+        }
+      },
+      "404": {
+        "summary": "Not Found",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 404,
+          "error": "Not Found",
+          "message": "The resource with given URI doesn't exist."
+        }
+      },
+      "405": {
+        "summary": "Method Not Allowed",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 405,
+          "error": "Method Not Allowed",
+          "message": "The resource with given URI doesn't allow this HTTP method."
+        }
+      },
+      "409": {
+        "summary": "Conflict",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 409,
+          "error": "Conflict",
+          "message": "The operation has been rejected due to current resource state."
+        }
+      },
+      "412": {
+        "summary": "Precondition Failed",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 412,
+          "error": "Precondition Failed",
+          "message": "One or more preconditions are not met."
+        }
+      },
+      "415": {
+        "summary": "Unsupported Media",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 415,
+          "error": "Unsupported Media",
+          "message": "Multimedia format is not supported by server."
+        }
+      },
+      "500": {
+        "summary": "Internal Server Error",
+        "value": {
+          "timestamp": "2019-03-29T16:44:38.629+0000",
+          "status": 500,
+          "error": "Internal Server Error",
+          "message": "The API server is undergoing internal problems."
+        }
       }
     }
   }
