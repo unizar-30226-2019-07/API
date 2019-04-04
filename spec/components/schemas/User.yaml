@@ -62,5 +62,14 @@ properties:
     maximum: 5
     example: 2.75
   picture:
-    $ref: '#/components/schemas/Picture'
+    allOf:
+      - readOnly: true
+      - $ref: '#/components/schemas/Picture'
+  picture_id:
+    writeOnly: true
+    type: integer
+    format: int32
+    description: Identificador único
+    minimum: 1
+    example: 35749
 description: Representación de un Usuario.
