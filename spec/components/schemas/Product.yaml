@@ -2,7 +2,9 @@ type: object
 required:
   - id
   - type
-  - name
+  - title
+  - owner
+  - owner_id
   - description
   - published
   - location
@@ -29,7 +31,16 @@ properties:
     maxLength: 50
     example: 'Renault R11 1.4 GTL'
   owner:
-    $ref: '#/components/schemas/User'
+    allOf:
+      - readOnly: true
+      - $ref: '#/components/schemas/User'
+  owner_id:
+    writeOnly: true
+    type: integer
+    format: int32
+    description: Identificador único de propietario
+    minimum: 1
+    example: 345
   description:
     type: string
     description: Descripción detallada.
@@ -44,10 +55,11 @@ properties:
   location:
     $ref: '#/components/schemas/Location'
   distance:
+    nullable: true
     readOnly: true
     type: integer
     format: int32
-    description: Distancia lineal (en km) al punto de referencia.
+    description: Distancia lineal (en km) al punto de referencia (si fue especificado en la petición).
     minimum: 1
   category:
     type: string
