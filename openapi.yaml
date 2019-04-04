@@ -712,6 +712,33 @@ paths:
           format: int32
           description: Identificador único del usuario
           minimum: 1
+  /verify:
+    post:
+      tags:
+        - default
+      summary: Verificar email
+      description: Verifica la pertenencia de una dirección de correo electrónico a un usuario concreto del sistema.
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: Código temporal único
+          example: 067e6162-3b6f-4ae2-a171-2470b63dff00
+          schema:
+            type: string
+            pattern: '[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Petición incorrecta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/400'
 components:
   schemas:
     Auction:
