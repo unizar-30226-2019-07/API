@@ -74,8 +74,19 @@ properties:
       - en venta
       - vendido
   media:
+    readOnly: true
     type: array
     items:
       $ref: '#/components/schemas/Picture'
+    description: Lista de imágenes. La primera imagen es la minuatura
+  media_id:
+    writeOnly: true
+    type: array
+    items:
+      type: integer
+      format: int32
+      description: Identificador único
+      minimum: 1
+      example: 35749
     description: Lista de imágenes. La primera imagen es la minuatura
 description: Representación de un Producto.
