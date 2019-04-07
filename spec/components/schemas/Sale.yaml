@@ -20,14 +20,6 @@ allOf:
           - EUR
           - USD
         example: 'EUR'
-      status:
-        readOnly: true
-        type: string
-        description: Estado de la venta
-        enum:
-          - on sale
-          - reserved
-          - sold
       views:
         readOnly: true
         type: integer

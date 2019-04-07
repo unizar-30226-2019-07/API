@@ -21,10 +21,3 @@ allOf:
         allOf:
           - readOnly: true
           - $ref: '#/components/schemas/Bid'
-      status:
-        readOnly: true
-        type: string
-        description: Estado de la subasta
-        enum:
-          - bidding
-          - awarded

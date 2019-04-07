@@ -9,6 +9,7 @@ required:
   - published
   - location
   - category
+  - status
 properties:
   id:
     readOnly: true
@@ -65,6 +66,13 @@ properties:
     type: string
     description: Categoría a la que pertenece
     example: 'Automoción'
+  status:
+    readOnly: true
+    type: string
+    description: Estado de la venta
+    enum:
+      - en venta
+      - vendido
   media:
     type: array
     items:

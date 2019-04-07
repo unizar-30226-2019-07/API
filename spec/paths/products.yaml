@@ -102,6 +102,16 @@ get:
       schema:
         type: integer
         format: int32
+    - name: status
+      in: query
+      required: false
+      description: Estado de la venta.
+      example: "en venta"
+      schema:
+        type: string
+        enum:
+          - "en venta"
+          - "vendido"
     - name: $size
       in: query
       required: false
