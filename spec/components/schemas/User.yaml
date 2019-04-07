@@ -26,10 +26,10 @@ properties:
     type: string
     description: Estado de la cuenta
     enum:
-      - active
-      - inactive
-      - pending
-    example: 'active'
+      - activa
+      - bloqueada
+      - pendiente
+    example: 'activa'
   first_name:
     type: string
     description: Nombre de pila
