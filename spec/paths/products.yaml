@@ -164,7 +164,7 @@ post:
             default:
               $ref: '#/components/examples/401'
     '402':
-      description: Prohibido
+      description: Prohibido (sin permisos para asociar al propietario)
       content:
         application/json:
           schema:
