@@ -3,6 +3,25 @@ get:
     - products
   summary: Obtener un Producto
   description: Carga la información de un Producto.
+  parameters:
+    - name: lat
+      in: query
+      required: false
+      description: Latitud del punto de referencia
+      example: -34.397
+      schema:
+        type: number
+        minimum: -90
+        maximum: 90
+    - name: lng
+      in: query
+      required: false
+      description: Longitud del punto de referencia
+      example: 150.644
+      schema:
+        type: number
+        minimum: -180
+        maximum: 180
   responses:
     '200':
       description: OK
