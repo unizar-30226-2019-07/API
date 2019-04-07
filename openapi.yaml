@@ -224,6 +224,24 @@ paths:
           schema:
             type: string
             format: date
+        - name: owner
+          in: query
+          required: false
+          description: Propietario de los productos.
+          example: 345
+          schema:
+            type: integer
+            format: int32
+        - name: status
+          in: query
+          required: false
+          description: Estado de la venta.
+          example: en venta
+          schema:
+            type: string
+            enum:
+              - en venta
+              - vendido
         - name: $size
           in: query
           required: false
@@ -294,7 +312,7 @@ paths:
                 default:
                   $ref: '#/components/examples/401'
         '402':
-          description: Prohibido
+          description: Prohibido (sin permisos para asociar al propietario)
           content:
             application/json:
               schema:
@@ -308,6 +326,25 @@ paths:
         - products
       summary: Obtener un Producto
       description: Carga la información de un Producto.
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: false
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
       responses:
         '200':
           description: OK
@@ -487,15 +524,6 @@ paths:
               examples:
                 default:
                   $ref: '#/components/examples/401'
-        '402':
-          description: Prohibido
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                default:
-                  $ref: '#/components/examples/402'
     post:
       tags:
         - users
@@ -541,15 +569,6 @@ paths:
               examples:
                 default:
                   $ref: '#/components/examples/401'
-        '402':
-          description: Prohibido
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-              examples:
-                default:
-                  $ref: '#/components/examples/402'
         '404':
           description: No encontrado
           content:
@@ -765,13 +784,6 @@ components:
               allOf:
                 - readOnly: true
                 - $ref: '#/components/schemas/Bid'
-            status:
-              readOnly: true
-              type: string
-              description: Estado de la subasta
-              enum:
-                - bidding
-                - awarded
     Bid:
       type: object
       required:
@@ -913,6 +925,7 @@ components:
         - published
         - location
         - category
+        - status
       properties:
         id:
           readOnly: true
@@ -969,6 +982,13 @@ components:
           type: string
           description: Categoría a la que pertenece
           example: Automoción
+        status:
+          readOnly: true
+          type: string
+          description: Estado de la venta
+          enum:
+            - en venta
+            - vendido
         media:
           type: array
           items:
@@ -998,14 +1018,6 @@ components:
                 - EUR
                 - USD
               example: EUR
-            status:
-              readOnly: true
-              type: string
-              description: Estado de la venta
-              enum:
-                - on sale
-                - reserved
-                - sold
             views:
               readOnly: true
               type: integer
@@ -1048,10 +1060,10 @@ components:
           type: string
           description: Estado de la cuenta
           enum:
-            - active
-            - inactive
-            - pending
-          example: active
+            - activa
+            - bloqueada
+            - pendiente
+          example: activa
         first_name:
           type: string
           description: Nombre de pila

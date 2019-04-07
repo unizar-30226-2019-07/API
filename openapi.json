@@ -199,6 +199,31 @@
             }
           },
           {
+            "name": "owner",
+            "in": "query",
+            "required": false,
+            "description": "Propietario de los productos.",
+            "example": 345,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "Estado de la venta.",
+            "example": "en venta",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "en venta",
+                "vendido"
+              ]
+            }
+          },
+          {
             "name": "$size",
             "in": "query",
             "required": false,
@@ -311,7 +336,7 @@
             }
           },
           "402": {
-            "description": "Prohibido",
+            "description": "Prohibido (sin permisos para asociar al propietario)",
             "content": {
               "application/json": {
                 "schema": {
@@ -335,6 +360,32 @@
         ],
         "summary": "Obtener un Producto",
         "description": "Carga la información de un Producto.",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": false,
+            "description": "Latitud del punto de referencia",
+            "example": -34.397,
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": false,
+            "description": "Longitud del punto de referencia",
+            "example": 150.644,
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -623,21 +674,6 @@
                 }
               }
             }
-          },
-          "402": {
-            "description": "Prohibido",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/402"
-                  }
-                }
-              }
-            }
           }
         }
       },
@@ -707,21 +743,6 @@
                 "examples": {
                   "default": {
                     "$ref": "#/components/examples/401"
-                  }
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Prohibido",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                },
-                "examples": {
-                  "default": {
-                    "$ref": "#/components/examples/402"
                   }
                 }
               }
@@ -1071,15 +1092,6 @@
                     "$ref": "#/components/schemas/Bid"
                   }
                 ]
-              },
-              "status": {
-                "readOnly": true,
-                "type": "string",
-                "description": "Estado de la subasta",
-                "enum": [
-                  "bidding",
-                  "awarded"
-                ]
               }
             }
           }
@@ -1262,7 +1274,8 @@
           "description",
           "published",
           "location",
-          "category"
+          "category",
+          "status"
         ],
         "properties": {
           "id": {
@@ -1336,6 +1349,15 @@
             "description": "Categoría a la que pertenece",
             "example": "Automoción"
           },
+          "status": {
+            "readOnly": true,
+            "type": "string",
+            "description": "Estado de la venta",
+            "enum": [
+              "en venta",
+              "vendido"
+            ]
+          },
           "media": {
             "type": "array",
             "items": {
@@ -1375,16 +1397,6 @@
                   "USD"
                 ],
                 "example": "EUR"
-              },
-              "status": {
-                "readOnly": true,
-                "type": "string",
-                "description": "Estado de la venta",
-                "enum": [
-                  "on sale",
-                  "reserved",
-                  "sold"
-                ]
               },
               "views": {
                 "readOnly": true,
@@ -1437,11 +1449,11 @@
             "type": "string",
             "description": "Estado de la cuenta",
             "enum": [
-              "active",
-              "inactive",
-              "pending"
+              "activa",
+              "bloqueada",
+              "pendiente"
             ],
-            "example": "active"
+            "example": "activa"
           },
           "first_name": {
             "type": "string",
