@@ -94,6 +94,14 @@ get:
       schema:
         type: string
         format: date
+    - name: owner
+      in: query
+      required: false
+      description: Propietario de los productos.
+      example: 345
+      schema:
+        type: integer
+        format: int32
     - name: $size
       in: query
       required: false
