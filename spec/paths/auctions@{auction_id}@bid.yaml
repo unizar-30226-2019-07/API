@@ -1,0 +1,50 @@
+post:              
+  tags:
+    - auctions
+  summary: Pujar en una Subasta
+  description: Añade una Puja a la Subasta
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/Bid'
+    required: true
+  responses:
+    '201':
+      description: Creado (nueva puja creada)
+    '401':
+      description: No autorizado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/401'
+    '402':
+      description: Prohibido (sin permisos para asociar al propietario)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/402'
+    '409':
+      description: Conflicto (oferta inferior o igual al precio actual)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/409'
+parameters:
+  - name: auction_id
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int32
+      description: Identificador único de la subasta
+      minimum: 1

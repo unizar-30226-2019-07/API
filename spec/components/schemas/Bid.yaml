@@ -10,7 +10,16 @@ properties:
     minimum: 0
     example: 1300
   bidder:
-    $ref: '#/components/schemas/User'
+    allOf:
+      - readOnly: true
+      - $ref: '#/components/schemas/User'
+  bidder_id:
+    writeOnly: true
+    type: integer
+    format: int32
+    description: Identificador único de propietario
+    minimum: 1
+    example: 345
   date:
     readOnly: true
     type: string

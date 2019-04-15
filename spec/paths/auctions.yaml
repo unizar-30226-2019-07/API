@@ -1,9 +1,9 @@
 get:
   tags:
-    - products
-  summary: Obtener lista de Productos
+    - auctions
+  summary: Obtener lista de Subastas
   description: >-
-    Carga una lista con todos los Productos registrados en la aplicación que
+    Carga una lista con todos las Subastas registradas en la aplicación que
     cumplen las condiciones.
   parameters:
     - name: lat
@@ -84,7 +84,7 @@ get:
     - name: owner
       in: query
       required: false
-      description: Propietario de los productos.
+      description: Propietario de las subastas.
       example: 345
       schema:
         type: integer
@@ -92,7 +92,7 @@ get:
     - name: status
       in: query
       required: false
-      description: Estado de la venta.
+      description: Estado de la subasta.
       example: "en venta"
       schema:
         type: string
@@ -130,17 +130,17 @@ get:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Sale'
-post:              
+              $ref: '#/components/schemas/Auction'
+post:
   tags:
-    - products
-  summary: Crear nuevo Producto
+    - auctions
+  summary: Crear nueva Subasta
   description: Añade un Producto a la aplicación
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Sale'
+          $ref: '#/components/schemas/Auction'
     required: true
   responses:
     '201':

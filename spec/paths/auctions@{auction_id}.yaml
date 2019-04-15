@@ -1,8 +1,8 @@
 get:
   tags:
-    - products
-  summary: Obtener un Producto
-  description: Carga la información de un Producto.
+    - auctions
+  summary: Obtener una Subasta
+  description: Carga la información de una Subasta.
   parameters:
     - name: lat
       in: query
@@ -28,7 +28,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Sale'
+            $ref: '#/components/schemas/Auction'
     '404':
       description: No encontrado
       content:
@@ -40,15 +40,15 @@ get:
               $ref: '#/components/examples/404'
 put:
   tags:
-    - products
-  summary: Actualizar un Producto
-  description: Modificar la información de un producto preexistente. 
-               No es posible modificar productos vendidos.
+    - auctions
+  summary: Actualizar una Subasta
+  description: Modificar la información de una subasta preexistente. 
+               No es posible modificar subastas vendidas.
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '#/components/schemas/Sale'
+          $ref: '#/components/schemas/Auction'
     required: true
   responses:
     '200':
@@ -81,7 +81,7 @@ put:
             default:
               $ref: '#/components/examples/404'
     '409':
-      description: Conflicto (producto vendido)
+      description: Conflicto (subasta vendida)
       content:
         application/json:
           schema:
@@ -91,9 +91,9 @@ put:
                 $ref: '#/components/examples/409'
 delete:
   tags:
-    - products
-  summary: Eliminar un Producto
-  description: Elimina la información de un producto de la base de datos.
+    - auctions
+  summary: Eliminar un Subasta
+  description: Elimina la información de una subasta de la base de datos.
   responses:
     '200':
       description: OK
@@ -125,11 +125,11 @@ delete:
             default:
               $ref: '#/components/examples/404'
 parameters:
-  - name: product_id
+  - name: auction_id
     in: path
     required: true
     schema:
       type: integer
       format: int32
-      description: Identificador único del producto
+      description: Identificador único de la subasta
       minimum: 1

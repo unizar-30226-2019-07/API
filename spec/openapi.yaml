@@ -123,6 +123,9 @@ x-tagGroups:
   - name: Productos
     tags:
       - products
+  - name: Subastas
+    tags:
+      - auctions
   - name: Chat
     tags:
       - chats
