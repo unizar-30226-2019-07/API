@@ -62,5 +62,7 @@ properties:
     maximum: 5
     example: 2.75
   picture:
-    $ref: '#/components/schemas/Picture'
+    oneOf:
+      - $ref: '#/components/schemas/PictureReference'
+      - $ref: '#/components/schemas/Picture'
 description: Representación de un Usuario.

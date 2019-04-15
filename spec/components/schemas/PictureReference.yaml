@@ -1,0 +1,11 @@
+type: object
+required:
+  - idImagen
+properties:
+  idImagen:
+    type: integer
+    format: int32
+    description: Identificador único
+    minimum: 1
+    example: 35749
+description: Referencia a archivo multimedia de imagen.

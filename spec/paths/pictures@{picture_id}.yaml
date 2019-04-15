@@ -1,0 +1,51 @@
+get:
+  tags:
+    - default
+  summary: Obtener una Imagen
+  description: Descarga una imagen como archivo
+  responses:
+    '200':
+      description: OK
+      content:
+        image/bmp:
+          schema:
+            type: string
+            format: binary
+        image/jpeg:
+          schema:
+            type: string
+            format: binary
+        image/gif:
+          schema:
+            type: string
+            format: binary
+        image/png:
+          schema:
+            type: string
+            format: binary
+        image/svg+xml:
+          schema:
+            type: string
+            format: binary
+        image/tiff:
+          schema:
+            type: string
+            format: binary
+    '404':
+      description: No encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            default:
+              $ref: '#/components/examples/404'
+parameters:
+  - name: picture_id
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int32
+      description: Identificador único de la subasta
+      minimum: 1

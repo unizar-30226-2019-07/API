@@ -76,6 +76,8 @@ properties:
   media:
     type: array
     items:
-      $ref: '#/components/schemas/Picture'
+      oneOf:
+        - $ref: '#/components/schemas/PictureReference'
+        - $ref: '#/components/schemas/Picture'
     description: Lista de imágenes. La primera imagen es la minuatura
 description: Representación de un Producto.
