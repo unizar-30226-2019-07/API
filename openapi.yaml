@@ -122,6 +122,9 @@ x-tagGroups:
   - name: Productos
     tags:
       - products
+  - name: Subastas
+    tags:
+      - auctions
   - name: Chat
     tags:
       - chats
@@ -129,6 +132,356 @@ servers:
   - url: 'http://api.selit.ml/v1'
   - url: 'https://api.selit.ml/v1'
 paths:
+  /auctions:
+    get:
+      tags:
+        - auctions
+      summary: Obtener lista de Subastas
+      description: Carga una lista con todos las Subastas registradas en la aplicación que cumplen las condiciones.
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: true
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+        - name: distance
+          in: query
+          required: true
+          description: Distancia lineal máxima (en km) al punto de referencia
+          example: 50
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+        - name: category
+          in: query
+          required: false
+          description: Categoría en la que buscar
+          example: Automoción
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          description: Consulta por texto
+          example: Teléfono Android
+          schema:
+            type: string
+        - name: priceFrom
+          in: query
+          required: false
+          description: Precio mínimo a mostrar
+          example: 1000
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: priceTo
+          in: query
+          required: false
+          description: Precio máximo a mostrar
+          example: 3500
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: publishedFrom
+          in: query
+          required: false
+          description: Fecha de publicación mínima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: publishedTo
+          in: query
+          required: false
+          description: Fecha de publicación máxima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: owner
+          in: query
+          required: false
+          description: Propietario de las subastas.
+          example: 345
+          schema:
+            type: integer
+            format: int32
+        - name: status
+          in: query
+          required: false
+          description: Estado de la subasta.
+          example: en venta
+          schema:
+            type: string
+            enum:
+              - en venta
+              - vendido
+        - name: $size
+          in: query
+          required: false
+          description: Tamaño de la página.
+          example: 10
+          schema:
+            type: integer
+            minimum: 1
+        - name: $page
+          in: query
+          required: false
+          description: Número de página.
+          example: 1
+          schema:
+            type: integer
+            minimum: 1
+        - name: $sort
+          in: query
+          required: false
+          description: Atributo(s) por los que ordenar
+          example: 'distance ASC, published DESC'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Auction'
+    post:
+      tags:
+        - auctions
+      summary: Crear nueva Subasta
+      description: Añade un Producto a la aplicación
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auction'
+        required: true
+      responses:
+        '201':
+          description: Creado (nuevo producto creado)
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido (sin permisos para asociar al propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+  '/auctions/{auction_id}':
+    get:
+      tags:
+        - auctions
+      summary: Obtener una Subasta
+      description: Carga la información de una Subasta.
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: false
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    put:
+      tags:
+        - auctions
+      summary: Actualizar una Subasta
+      description: Modificar la información de una subasta preexistente. No es posible modificar subastas vendidas.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auction'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+        '409':
+          description: Conflicto (subasta vendida)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+    delete:
+      tags:
+        - auctions
+      summary: Eliminar un Subasta
+      description: Elimina la información de una subasta de la base de datos.
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    parameters:
+      - name: auction_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único de la subasta
+          minimum: 1
+  '/auctions/{auction_id}/bid':
+    post:
+      tags:
+        - auctions
+      summary: Pujar en una Subasta
+      description: Añade una Puja a la Subasta
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+        required: true
+      responses:
+        '201':
+          description: Creado (nueva puja creada)
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido (sin permisos para asociar al propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '409':
+          description: Conflicto (oferta inferior o igual al precio actual)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+    parameters:
+      - name: auction_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único de la subasta
+          minimum: 1
   /products:
     get:
       tags:
@@ -163,19 +516,6 @@ paths:
             type: integer
             format: int32
             minimum: 1
-        - name: types
-          in: query
-          description: Tipo(s) de Productos a mostrar
-          example: '?types=sale&types=auction'
-          style: form
-          explode: true
-          schema:
-            type: array
-            items:
-              type: string
-              enum:
-                - sale
-                - auction
         - name: category
           in: query
           required: false
@@ -273,14 +613,7 @@ paths:
               schema:
                 type: array
                 items:
-                  oneOf:
-                    - $ref: '#/components/schemas/Sale'
-                    - $ref: '#/components/schemas/Auction'
-                  discriminator:
-                    propertyName: type
-                    mapping:
-                      sale: '#/components/schemas/Sale'
-                      auction: '#/components/schemas/Auction'
+                  $ref: '#/components/schemas/Sale'
     post:
       tags:
         - products
@@ -290,14 +623,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/Sale'
-                - $ref: '#/components/schemas/Auction'
-              discriminator:
-                propertyName: type
-                mapping:
-                  sale: '#/components/schemas/Sale'
-                  auction: '#/components/schemas/Auction'
+              $ref: '#/components/schemas/Sale'
         required: true
       responses:
         '201':
@@ -351,14 +677,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Sale'
-                  - $ref: '#/components/schemas/Auction'
-                discriminator:
-                  propertyName: type
-                  mapping:
-                    sale: '#/components/schemas/Sale'
-                    auction: '#/components/schemas/Auction'
+                $ref: '#/components/schemas/Sale'
         '404':
           description: No encontrado
           content:
@@ -377,14 +696,7 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/Sale'
-                - $ref: '#/components/schemas/Auction'
-              discriminator:
-                propertyName: type
-                mapping:
-                  sale: '#/components/schemas/Sale'
-                  auction: '#/components/schemas/Auction'
+              $ref: '#/components/schemas/Sale'
         required: true
       responses:
         '200':
@@ -797,7 +1109,16 @@ components:
           minimum: 0
           example: 1300
         bidder:
-          $ref: '#/components/schemas/User'
+          allOf:
+            - readOnly: true
+            - $ref: '#/components/schemas/User'
+        bidder_id:
+          writeOnly: true
+          type: integer
+          format: int32
+          description: Identificador único de propietario
+          minimum: 1
+          example: 345
         date:
           readOnly: true
           type: string
