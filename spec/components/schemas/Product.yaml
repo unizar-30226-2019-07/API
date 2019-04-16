@@ -46,13 +46,20 @@ properties:
     type: string
     description: Descripción detallada.
     example: 'Color gris/plata. Año 1986. 47000 km. El coche está en perfecto estado.'
+  currency:
+    type: string
+    description: Divisa en la que se expresa el precio
+    enum:
+      - EUR
+      - USD
+    example: 'EUR'
   published:
     readOnly: true
     type: string
-    format: date-time
+    format: date
     description: Fecha de publicacaión (UTC)
-    pattern: "yyyy-MM-dd'T'HH:mm:ss'Z'"
-    example: 2017-07-21T17:32:28Z
+    pattern: "yyyy-MM-dd"
+    example: 2017-07-21
   location:
     $ref: '#/components/schemas/Location'
   distance:

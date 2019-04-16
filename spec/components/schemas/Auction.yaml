@@ -4,19 +4,19 @@ allOf:
     required:
       - startPrice
       - currency
+      - endDate
     properties:
       startPrice:
         type: number
         description: Precio de salida
         minimum: 0
         example: 1000.00
-      currency:
+      endDate:
         type: string
-        description: Moneda en la que se expresa el precio
-        enum:
-          - EUR
-          - USD
-        example: 'EUR'
+        format: date-time
+        description: Fecha de finalización (UTC)
+        pattern: "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        example: 2017-07-21T17:32:28Z
       lastBid:
         allOf:
           - readOnly: true

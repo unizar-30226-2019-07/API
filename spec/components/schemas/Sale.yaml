@@ -13,13 +13,6 @@ allOf:
         description: Precio de venta
         minimum: 0
         example: 1500.00
-      currency:
-        type: string
-        description: Divisa en la que se expresa el precio
-        enum:
-          - EUR
-          - USD
-        example: 'EUR'
       views:
         readOnly: true
         type: integer
