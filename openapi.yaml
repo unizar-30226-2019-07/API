@@ -1131,19 +1131,19 @@ components:
           required:
             - startPrice
             - currency
+            - endDate
           properties:
             startPrice:
               type: number
               description: Precio de salida
               minimum: 0
               example: 1000
-            currency:
+            endDate:
               type: string
-              description: Moneda en la que se expresa el precio
-              enum:
-                - EUR
-                - USD
-              example: EUR
+              format: date-time
+              description: Fecha de finalización (UTC)
+              pattern: 'yyyy-MM-dd''T''HH:mm:ss''Z'''
+              example: 2017-07-21T17:32:28.000Z
             lastBid:
               allOf:
                 - readOnly: true
@@ -1153,6 +1153,7 @@ components:
       required:
         - amount
         - bidder
+        - bidder_id
         - date
       properties:
         amount:
@@ -1350,13 +1351,20 @@ components:
           type: string
           description: Descripción detallada.
           example: Color gris/plata. Año 1986. 47000 km. El coche está en perfecto estado.
+        currency:
+          type: string
+          description: Divisa en la que se expresa el precio
+          enum:
+            - EUR
+            - USD
+          example: EUR
         published:
           readOnly: true
           type: string
-          format: date-time
+          format: date
           description: Fecha de publicacaión (UTC)
-          pattern: 'yyyy-MM-dd''T''HH:mm:ss''Z'''
-          example: 2017-07-21T17:32:28.000Z
+          pattern: yyyy-MM-dd
+          example: 2017-07-21T00:00:00.000Z
         location:
           $ref: '#/components/schemas/Location'
         distance:
@@ -1401,13 +1409,6 @@ components:
               description: Precio de venta
               minimum: 0
               example: 1500
-            currency:
-              type: string
-              description: Divisa en la que se expresa el precio
-              enum:
-                - EUR
-                - USD
-              example: EUR
             views:
               readOnly: true
               type: integer
