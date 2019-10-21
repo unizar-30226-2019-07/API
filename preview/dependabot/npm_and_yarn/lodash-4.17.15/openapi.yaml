@@ -1,0 +1,1557 @@
+openapi: 3.0.0
+info:
+  description: |
+    [**Selit! API**](http://api.selit.ml) es una interfaz basada en HTTP, creada 
+    para los desarrolladores que deseen construir nuevas interfaces de 
+    aplicación al portal [Selit!](http://selit.ml).
+
+    # Introducción
+    Esta API está documentada en **formato OpenAPI**. Además de la sintaxis
+    estándar de OpenAPI se usa un [repertorio extendido](https://github.com/Rebilly/ReDoc/blob/master/docs/redoc-vendor-extensions.md).
+
+    La API se estructura en torno a los recursos disponibles dentro de la 
+    apliación Selit!. La interacción con dichos recursos se realiza a través de 
+    peticiones HTTP. Cada operación sobre un recurso puede requerir un nivel de 
+    autenticación diferente.
+
+    ## Recursos
+    Los recursos de la API se pueden clasificar según su comportamiento en 
+    cuatro grupos.
+
+    | Nombre      | Comentario |
+    | ----------- | ---------- |
+    | Documento   | Representación de un objeto o insta por el servidor. |
+    | Colección   | Conjunto de documentos manejado por el servidor. |
+    | Almacén     | Directorio de documentos manejado por el cliente. |
+    | Controlador | Procedimiento asociado a un documento. |
+        
+    Los **Documentos** pueden contener **Colecciones**, así como **Almacenes**,
+    como parte de sus atributos. Cada **Documento** tiene asociado un 
+    identificador único dentro de las **Colecciones** o **Alamacenes** a los 
+    que pertenezca.
+        
+    Los principales recursos de tipo **Documento** son los siguientes.
+
+    | Recurso | Descripción |
+    | ------- | ----------- | 
+    | Usuario | Toda persona registrada en la aplicación. | 
+    | Anuncio | Venta de un objeto mediante compra directa. |
+    | Subasta | Venta de un objeto mediante pujas incrementales. |
+    | Chat    | Conversación entre dos usuarios en referencia a un anuncio. |
+
+    ## Operaciones
+    Las operaciones sobre los recursos se realizan mediante peticiones HTTP. 
+    La semántica de cada petición varía en función del tipo de recurso.
+
+    | Petición | Recurso     | Descripción |
+    | -------- | ----------- | ----------- |
+    | GET      | Documento   | Obtener la inforación asociada a la instancia. |
+    | GET      | Colección   | Lista de objetos que pertenecen al recurso. |
+    | GET      | Almacén     | Lista de objetos que han sido añadidos al recurso. |
+    | HEAD     | Documento   | Comprueba la existencia de un recurso. |
+    | PUT      | Documento   | Inserta o actualiza un documento (o parte de un documento). |
+    | POST     | Colección   | Crea un nuevo recurso en la colección. |
+    | POST     | Controlador | Ejecuta el comportamiento asociado al procedimiento. |
+    | DELETE   | Documento   | Elimina el recurso de su padre. |
+    | OPTIONS  | *Todos*     | Devuelve la lista de posibles operaciones sobre el recurso. |
+
+    ## Códigos de respuesta
+
+    Las operaciones con recursos pueden ocasionar errores que serán transmitidos
+    en la respuesta a la petición HTTP.
+
+    ### Códigos de éxito
+
+    | Código | Nombre            | Descripción |
+    | ------ | ----------------- | ----------- |
+    | 200    | OK                | Indica éxito genérico en la operación. |
+    | 201    | Created           | Indica que un nuevo recurso ha sido creado (p. ej. en colecciones o almacenes). |
+    | 202    | Accepted          | Indica el inicio una acción asíncrona (p. ej. en controladores). |
+    | 204    | No Content        | Indica que el cuerpo de la respuesta está vacío de forma intencionada. |
+    | 301    | Moved Permanently | Indica que la URI solicitada ya no corresponde con el recurso solicitado. |
+
+    ### Códigos de fracaso
+
+    | Código | Nombre                | Descripción |
+    | ------ | --------------------- | ----------- |
+    | 400    | Bad Request           | Indica un error genérico en la operación. |
+    | 401    | Unauthorized          | Indica que los credenciales de usuario son incorrectos o no han sido enviados. |
+    | 402    | Forbidden             | Indica que el usuario identificado no tiene permiso para realizar la operación. |
+    | 404    | Not Found             | Indica que no se encontró el recurso asociado con la URI. |
+    | 405    | Method Not Allowed    | Indica que el método HTTP (petición) no es válido sobre dicho recurso. |
+    | 409    | Conflict              | Indica que la operación ha sido rechazada porque violaba restricciones del estado del recurso. |
+    | 412    | Precondition Failed   | Indica incumplimiento de una de las precondiciones de la operación. |
+    | 415    | Unsupported Media     | Indica que el formato multimedia no es soportado por el servidor. |
+    | 500    | Internal Server Error | Indica que el servidor de la API está teniendo problemas ajenos a la petición. |
+
+    La mayoría de los códigos de error irán acompañados de una explicación más 
+    detallada en el cuerpo de la respuesta.
+
+    # Autenticación
+    Selit! API ofrece los siguientes métodos de autenticación:
+      - JWT
+
+    <security-definitions/> 
+  version: 1.0.0
+  title: Selit! API
+  contact:
+    name: API Support
+    url: 'https://github.com/unizar-30226-2019-07/API'
+  x-logo:
+    url: 'https://i.imgur.com/UTVJLgd.png'
+    altText: Selit logo
+  license:
+    name: MIT License
+    url: 'https://raw.githubusercontent.com/unizar-30226-2019-07/API/master/LICENSE'
+tags:
+  - name: login
+    description: Gestion de sesiones de usuario
+  - name: users
+    description: Gestión de cuentas de usuario
+  - name: products
+    description: Gestión de productos
+  - name: chats
+    description: Gestión de mensajes
+x-tagGroups:
+  - name: General
+    tags:
+      - default
+  - name: Usuarios
+    tags:
+      - users
+  - name: Productos
+    tags:
+      - products
+  - name: Subastas
+    tags:
+      - auctions
+  - name: Chat
+    tags:
+      - chats
+servers:
+  - url: 'http://api.selit.ml/v1'
+  - url: 'https://api.selit.ml/v1'
+paths:
+  /auctions:
+    get:
+      tags:
+        - auctions
+      summary: Obtener lista de Subastas
+      description: Carga una lista con todos las Subastas registradas en la aplicación que cumplen las condiciones.
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: true
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+        - name: distance
+          in: query
+          required: true
+          description: Distancia lineal máxima (en km) al punto de referencia
+          example: 50
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+        - name: category
+          in: query
+          required: false
+          description: Categoría en la que buscar
+          example: Automoción
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          description: Consulta por texto
+          example: Teléfono Android
+          schema:
+            type: string
+        - name: priceFrom
+          in: query
+          required: false
+          description: Precio mínimo a mostrar
+          example: 1000
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: priceTo
+          in: query
+          required: false
+          description: Precio máximo a mostrar
+          example: 3500
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: publishedFrom
+          in: query
+          required: false
+          description: Fecha de publicación mínima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: publishedTo
+          in: query
+          required: false
+          description: Fecha de publicación máxima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: owner
+          in: query
+          required: false
+          description: Propietario de las subastas.
+          example: 345
+          schema:
+            type: integer
+            format: int32
+        - name: status
+          in: query
+          required: false
+          description: Estado de la subasta.
+          example: en venta
+          schema:
+            type: string
+            enum:
+              - en venta
+              - vendido
+        - name: $size
+          in: query
+          required: false
+          description: Tamaño de la página.
+          example: 10
+          schema:
+            type: integer
+            minimum: 1
+        - name: $page
+          in: query
+          required: false
+          description: Número de página.
+          example: 1
+          schema:
+            type: integer
+            minimum: 1
+        - name: $sort
+          in: query
+          required: false
+          description: Atributo(s) por los que ordenar
+          example: 'distance ASC, published DESC'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Auction'
+    post:
+      tags:
+        - auctions
+      summary: Crear nueva Subasta
+      description: Añade un Producto a la aplicación
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auction'
+        required: true
+      responses:
+        '201':
+          description: Creado (nuevo producto creado)
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido (sin permisos para asociar al propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+  '/auctions/{auction_id}':
+    get:
+      tags:
+        - auctions
+      summary: Obtener una Subasta
+      description: Carga la información de una Subasta.
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: false
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Auction'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    put:
+      tags:
+        - auctions
+      summary: Actualizar una Subasta
+      description: Modificar la información de una subasta preexistente. No es posible modificar subastas vendidas.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auction'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+        '409':
+          description: Conflicto (subasta vendida)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+    delete:
+      tags:
+        - auctions
+      summary: Eliminar un Subasta
+      description: Elimina la información de una subasta de la base de datos.
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    parameters:
+      - name: auction_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único de la subasta
+          minimum: 1
+  '/auctions/{auction_id}/bid':
+    post:
+      tags:
+        - auctions
+      summary: Pujar en una Subasta
+      description: Añade una Puja a la Subasta
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bid'
+        required: true
+      responses:
+        '201':
+          description: Creado (nueva puja creada)
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido (sin permisos para asociar al propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '409':
+          description: Conflicto (oferta inferior o igual al precio actual)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+    parameters:
+      - name: auction_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único de la subasta
+          minimum: 1
+  '/pictures/{picture_id}':
+    get:
+      tags:
+        - default
+      summary: Obtener una Imagen
+      description: Descarga una imagen como archivo
+      responses:
+        '200':
+          description: OK
+          content:
+            image/bmp:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/gif:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+                format: binary
+            image/tiff:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    parameters:
+      - name: picture_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único de la subasta
+          minimum: 1
+  /products:
+    get:
+      tags:
+        - products
+      summary: Obtener lista de Productos
+      description: Carga una lista con todos los Productos registrados en la aplicación que cumplen las condiciones.
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: true
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+        - name: distance
+          in: query
+          required: true
+          description: Distancia lineal máxima (en km) al punto de referencia
+          example: 50
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+        - name: category
+          in: query
+          required: false
+          description: Categoría en la que buscar
+          example: Automoción
+          schema:
+            type: string
+        - name: search
+          in: query
+          required: false
+          description: Consulta por texto
+          example: Teléfono Android
+          schema:
+            type: string
+        - name: priceFrom
+          in: query
+          required: false
+          description: Precio mínimo a mostrar
+          example: 1000
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: priceTo
+          in: query
+          required: false
+          description: Precio máximo a mostrar
+          example: 3500
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - name: publishedFrom
+          in: query
+          required: false
+          description: Fecha de publicación mínima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: publishedTo
+          in: query
+          required: false
+          description: Fecha de publicación máxima a mostrar
+          example: '1970-01-01'
+          schema:
+            type: string
+            format: date
+        - name: owner
+          in: query
+          required: false
+          description: Propietario de los productos.
+          example: 345
+          schema:
+            type: integer
+            format: int32
+        - name: status
+          in: query
+          required: false
+          description: Estado de la venta.
+          example: en venta
+          schema:
+            type: string
+            enum:
+              - en venta
+              - vendido
+        - name: $size
+          in: query
+          required: false
+          description: Tamaño de la página.
+          example: 10
+          schema:
+            type: integer
+            minimum: 1
+        - name: $page
+          in: query
+          required: false
+          description: Número de página.
+          example: 1
+          schema:
+            type: integer
+            minimum: 1
+        - name: $sort
+          in: query
+          required: false
+          description: Atributo(s) por los que ordenar
+          example: 'distance ASC, published DESC'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sale'
+    post:
+      tags:
+        - products
+      summary: Crear nuevo Producto
+      description: Añade un Producto a la aplicación
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sale'
+        required: true
+      responses:
+        '201':
+          description: Creado (nuevo producto creado)
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido (sin permisos para asociar al propietario)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+  '/products/{product_id}':
+    get:
+      tags:
+        - products
+      summary: Obtener un Producto
+      description: Carga la información de un Producto.
+      parameters:
+        - name: lat
+          in: query
+          required: false
+          description: Latitud del punto de referencia
+          example: -34.397
+          schema:
+            type: number
+            minimum: -90
+            maximum: 90
+        - name: lng
+          in: query
+          required: false
+          description: Longitud del punto de referencia
+          example: 150.644
+          schema:
+            type: number
+            minimum: -180
+            maximum: 180
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    put:
+      tags:
+        - products
+      summary: Actualizar un Producto
+      description: Modificar la información de un producto preexistente. No es posible modificar productos vendidos.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sale'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+        '409':
+          description: Conflicto (producto vendido)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+    delete:
+      tags:
+        - products
+      summary: Eliminar un Producto
+      description: Elimina la información de un producto de la base de datos.
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único del producto
+          minimum: 1
+  /users:
+    get:
+      tags:
+        - users
+      summary: Obtener lista de Usuarios
+      description: Carga una lista con todos los usuarios registrados en la aplicación que cumplen las condiciones.
+      parameters:
+        - name: email
+          in: query
+          required: false
+          description: Correo electrónico del usuario.
+          example: johndoe@example.com
+          schema:
+            type: string
+        - name: $size
+          in: query
+          required: false
+          description: Tamaño de la página.
+          example: 10
+          schema:
+            type: integer
+            minimum: 1
+        - name: $page
+          in: query
+          required: false
+          description: Número de página.
+          example: 1
+          schema:
+            type: integer
+            minimum: 1
+        - name: $sort
+          in: query
+          required: false
+          description: Atributo(s) por los que ordenar.
+          example: birth_date DESC
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+    post:
+      tags:
+        - users
+      summary: Crear nuevo Usuario
+      description: Añade un Usuario a la aplicación. No es posible crear dos usuarios con el mismo email.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+        required: true
+      responses:
+        '201':
+          description: Creado (nuevo usuario creado)
+        '409':
+          description: Conflicto (email duplicado)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/409'
+  '/users/{user_id}':
+    get:
+      tags:
+        - users
+      summary: Obtener un Usuario
+      description: Carga la información de un Usuario.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    put:
+      tags:
+        - users
+      summary: Actualizar un Usuario
+      description: Modificar la información de un usuario preexistente.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    delete:
+      tags:
+        - users
+      summary: Eliminar un Usuario
+      description: Elimina la información de un usuario de la base de datos.
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único del usuario
+          minimum: 1
+  '/users/{user_id}/change_password':
+    post:
+      tags:
+        - users
+      summary: Cambiar contraseña
+      parameters:
+        - name: old
+          in: query
+          required: false
+          description: Contraseña actual (Precondición)
+          example: 1234abcd
+          schema:
+            type: string
+        - name: new
+          in: query
+          required: true
+          description: Nueva contraseña
+          example: 5678efgh
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/401'
+        '402':
+          description: Prohibido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/402'
+        '404':
+          description: No encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/404'
+        '412':
+          description: Precondición fallida (contraseña actual incorrecta)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/412'
+    parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+          description: Identificador único del usuario
+          minimum: 1
+  /verify:
+    post:
+      tags:
+        - default
+      summary: Verificar email
+      description: Verifica la pertenencia de una dirección de correo electrónico a un usuario concreto del sistema.
+      parameters:
+        - name: token
+          in: query
+          required: true
+          description: Código temporal único
+          example: 067e6162-3b6f-4ae2-a171-2470b63dff00
+          schema:
+            type: string
+            pattern: '[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Petición incorrecta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                default:
+                  $ref: '#/components/examples/400'
+components:
+  schemas:
+    Auction:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          required:
+            - startPrice
+            - currency
+            - endDate
+          properties:
+            startPrice:
+              type: number
+              description: Precio de salida
+              minimum: 0
+              example: 1000
+            endDate:
+              type: string
+              format: date-time
+              description: Fecha de finalización (UTC)
+              pattern: 'yyyy-MM-dd''T''HH:mm:ss''Z'''
+              example: 2017-07-21T17:32:28.000Z
+            lastBid:
+              allOf:
+                - readOnly: true
+                - $ref: '#/components/schemas/Bid'
+    Bid:
+      type: object
+      required:
+        - amount
+        - bidder
+        - bidder_id
+        - date
+      properties:
+        amount:
+          type: number
+          description: Cantidad ofrecida en la divisa de la subasta
+          minimum: 0
+          example: 1300
+        bidder:
+          allOf:
+            - readOnly: true
+            - $ref: '#/components/schemas/User'
+        bidder_id:
+          writeOnly: true
+          type: integer
+          format: int32
+          description: Identificador único de propietario
+          minimum: 1
+          example: 345
+        date:
+          readOnly: true
+          type: string
+          format: date-time
+          description: Fecha y hora de la puja
+          pattern: 'yyyy-MM-dd''T''HH:mm:ss''Z'''
+          example: 2017-07-21T17:32:28.000Z
+      description: Representación de una Puja
+    Error:
+      type: object
+      required:
+        - status
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Hora del error
+          example: '2019-03-29T16:44:38.629+0000'
+        status:
+          type: integer
+          description: Código HTTP de error
+          minimum: 400
+          maximum: 599
+          example: 401
+        error:
+          type: string
+          enum:
+            - Bad Request
+            - Unauthorized
+            - Forbidden
+            - Not Found
+            - Method Not Allowed
+            - Conflict
+            - Precondition Failed
+            - Unsupported Media
+            - Internal Server Error
+          description: Nombre del código de estado HTTP
+          example: Unauthorized
+        message:
+          type: string
+          description: Descripción detallada del error
+          example: The user credentials does not exist.
+        path:
+          type: string
+          description: Ruta URI donde se produjo el error
+          example: /users/8
+      description: Estructura general de los errores de la API
+    Location:
+      type: object
+      required:
+        - lat
+        - lng
+      properties:
+        lat:
+          type: number
+          description: Latitud
+          minimum: -90
+          maximum: 90
+          example: -34.397
+        lng:
+          type: number
+          description: Longitud
+          minimum: -180
+          maximum: 180
+          example: 150.644
+      description: Ubicación geográfica.
+    NewUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - type: object
+          required:
+            - password
+          properties:
+            password:
+              writeOnly: true
+              type: string
+              format: password
+              description: Contraseña de inicio de sesión
+              minLength: 8
+              example: 1234abcd
+    Picture:
+      type: object
+      required:
+        - idImagen
+        - base64
+        - mime
+      properties:
+        idImagen:
+          readOnly: true
+          type: integer
+          format: int32
+          description: Identificador único
+          minimum: 1
+          example: 35749
+        mime:
+          writeOnly: true
+          type: string
+          description: Tipo de dato MIME
+          enum:
+            - image/bmp
+            - image/jpeg
+            - image/gif
+            - image/png
+            - image/svg+xml
+            - image/tiff
+          example: image/png
+        charset:
+          writeOnly: true
+          type: string
+          description: Conjunto de caracteres
+          default: utf-8
+          example: utf-8
+        base64:
+          writeOnly: true
+          type: string
+          description: Datos en base 64
+          example: R0lGODlhPQBEAPeoAJosM//AwO/AwHVYZ/z595kzAP/s7P+goOXMv8+fhw/v739/f+8PD98fH/8mJl+fn/9ZWb8/PzWlwv///6wWGbImAPgTEMImIN9gUFCEm/gDALULDN8PAD6atYdCTX9gUNKlj8wZAKUsAOzZz+UMAOsJAP/Z2ccMDA8PD/95eX5NWvsJCOVNQPtfX/8zM8+QePLl38MGBr8JCP+zs9myn/8GBqwpAP/GxgwJCPny78lzYLgjAJ8vAP9fX/+MjMUcAN8zM/9wcM8ZGcATEL+QePdZWf/29uc/P9cmJu9MTDImIN+/r7+/vz8/P8VNQGNugV8AAF9fX8swMNgTAFlDOICAgPNSUnNWSMQ5MBAQEJE3QPIGAM9AQMqGcG9vb6MhJsEdGM8vLx8fH98AANIWAMuQeL8fABkTEPPQ0OM5OSYdGFl5jo+Pj/+pqcsTE78wMFNGQLYmID4dGPvd3UBAQJmTkP+8vH9QUK+vr8ZWSHpzcJMmILdwcLOGcHRQUHxwcK9PT9DQ0O/v70w5MLypoG8wKOuwsP/g4P/Q0IcwKEswKMl8aJ9fX2xjdOtGRs/Pz+Dg4GImIP8gIH0sKEAwKKmTiKZ8aB/f39Wsl+LFt8dgUE9PT5x5aHBwcP+AgP+WltdgYMyZfyywz78AAAAAAAD///8AAP9mZv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAKgALAAAAAA9AEQAAAj/AFEJHEiwoMGDCBMqXMiwocAbBww4nEhxoYkUpzJGrMixogkfGUNqlNixJEIDB0SqHGmyJSojM1bKZOmyop0gM3Oe2liTISKMOoPy7GnwY9CjIYcSRYm0aVKSLmE6nfq05QycVLPuhDrxBlCtYJUqNAq2bNWEBj6ZXRuyxZyDRtqwnXvkhACDV+euTeJm1Ki7A73qNWtFiF+/gA95Gly2CJLDhwEHMOUAAuOpLYDEgBxZ4GRTlC1fDnpkM+fOqD6DDj1aZpITp0dtGCDhr+fVuCu3zlg49ijaokTZTo27uG7Gjn2P+hI8+PDPERoUB318bWbfAJ5sUNFcuGRTYUqV/3ogfXp1rWlMc6awJjiAAd2fm4ogXjz56aypOoIde4OE5u/F9x199dlXnnGiHZWEYbGpsAEA3QXYnHwEFliKAgswgJ8LPeiUXGwedCAKABACCN+EA1pYIIYaFlcDhytd51sGAJbo3onOpajiihlO92KHGaUXGwWjUBChjSPiWJuOO/LYIm4v1tXfE6J4gCSJEZ7YgRYUNrkji9P55sF/ogxw5ZkSqIDaZBV6aSGYq/lGZplndkckZ98xoICbTcIJGQAZcNmdmUc210hs35nCyJ58fgmIKX5RQGOZowxaZwYA+JaoKQwswGijBV4C6SiTUmpphMspJx9unX4KaimjDv9aaXOEBteBqmuuxgEHoLX6Kqx+yXqqBANsgCtit4FWQAEkrNbpq7HSOmtwag5w57GrmlJBASEU18ADjUYb3ADTinIttsgSB1oJFfA63bduimuqKB1keqwUhoCSK374wbujvOSu4QG6UvxBRydcpKsav++Ca6G8A6Pr1x2kVMyHwsVxUALDq/krnrhPSOzXG1lUTIoffqGR7Goi2MAxbv6O2kEG56I7CSlRsEFKFVyovDJoIRTg7sugNRDGqCJzJgcKE0ywc0ELm6KBCCJo8DIPFeCWNGcyqNFE06ToAfV0HBRgxsvLThHn1oddQMrXj5DyAQgjEHSAJMWZwS3HPxT/QMbabI/iBCliMLEJKX2EEkomBAUCxRi42VDADxyTYDVogV+wSChqmKxEKCDAYFDFj4OmwbY7bDGdBhtrnTQYOigeChUmc1K3QTnAUfEgGFgAWt88hKA6aCRIXhxnQ1yg3BCayK44EWdkUQcBByEQChFXfCB776aQsG0BIlQgQgE8qO26X1h8cEUep8ngRBnOy74E9QgRgEAC8SvOfQkh7FDBDmS43PmGoIiKUUEGkMEC/PJHgxw0xH74yx/3XnaYRJgMB8obxQW6kL9QYEJ0FIFgByfIL7/IQAlvQwEpnAC7DtLNJCKUoO/w45c44GwCXiAFB/OXAATQryUxdN4LfFiwgjCNYg+kYMIEFkCKDs6PKAIJouyGWMS1FSKJOMRB/BoIxYJIUXFUxNwoIkEKPAgCBZSQHQ1A2EWDfDEUVLyADj5AChSIQW6gu10bE/JG2VnCZGfo4R4d0sdQoBAHhPjhIB94v/wRoRKQWGRHgrhGSQJxCS+0pCZbEhAAOw==
+      description: Archivo multimedia de imagen.
+    PictureReference:
+      type: object
+      required:
+        - idImagen
+      properties:
+        idImagen:
+          type: integer
+          format: int32
+          description: Identificador único
+          minimum: 1
+          example: 35749
+      description: Referencia a archivo multimedia de imagen.
+    Product:
+      type: object
+      required:
+        - id
+        - type
+        - title
+        - owner
+        - owner_id
+        - description
+        - published
+        - location
+        - category
+        - status
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          format: int32
+          description: Identificador único
+          minimum: 1
+          example: 1234
+        type:
+          type: string
+          description: Tipo de anuncio
+          enum:
+            - sale
+            - auction
+          example: sale
+        title:
+          type: string
+          description: Descripción breve o nombre corto
+          minLength: 1
+          maxLength: 50
+          example: Renault R11 1.4 GTL
+        owner:
+          allOf:
+            - readOnly: true
+            - $ref: '#/components/schemas/User'
+        owner_id:
+          writeOnly: true
+          type: integer
+          format: int32
+          description: Identificador único de propietario
+          minimum: 1
+          example: 345
+        description:
+          type: string
+          description: Descripción detallada.
+          example: Color gris/plata. Año 1986. 47000 km. El coche está en perfecto estado.
+        currency:
+          type: string
+          description: Divisa en la que se expresa el precio
+          enum:
+            - EUR
+            - USD
+          example: EUR
+        published:
+          readOnly: true
+          type: string
+          format: date
+          description: Fecha de publicacaión (UTC)
+          pattern: yyyy-MM-dd
+          example: 2017-07-21T00:00:00.000Z
+        location:
+          $ref: '#/components/schemas/Location'
+        distance:
+          nullable: true
+          readOnly: true
+          type: integer
+          format: int32
+          description: Distancia lineal (en km) al punto de referencia (si fue especificado en la petición).
+          minimum: 1
+        category:
+          type: string
+          description: Categoría a la que pertenece
+          example: Automoción
+        status:
+          readOnly: true
+          type: string
+          description: Estado de la venta
+          enum:
+            - en venta
+            - vendido
+        media:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/PictureReference'
+              - $ref: '#/components/schemas/Picture'
+          description: Lista de imágenes. La primera imagen es la minuatura
+      description: Representación de un Producto.
+    Sale:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          required:
+            - price
+            - currency
+            - status
+            - views
+            - likes
+          properties:
+            price:
+              type: number
+              description: Precio de venta
+              minimum: 0
+              example: 1500
+            views:
+              readOnly: true
+              type: integer
+              format: int32
+              description: Número de vistas recibidas
+              minimum: 0
+              example: 54698
+            likes:
+              readOnly: true
+              type: integer
+              format: int32
+              description: Número de usuarios a los que les gusta
+              example: 315
+    User:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+        - id
+        - rating
+        - status
+      properties:
+        id:
+          readOnly: true
+          type: integer
+          format: int32
+          description: Identificador único
+          minimum: 1
+          example: 345
+        email:
+          type: string
+          format: email
+          description: Correo electrónico
+          maxLength: 254
+          pattern: '[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'
+          example: johndoe@example.com
+        status:
+          readOnly: true
+          type: string
+          description: Estado de la cuenta
+          enum:
+            - activa
+            - bloqueada
+            - pendiente
+          example: activa
+        first_name:
+          type: string
+          description: Nombre de pila
+          example: John
+        last_name:
+          type: string
+          description: Apellido(s)
+          example: Doe
+        gender:
+          nullable: true
+          type: string
+          description: Género
+          enum:
+            - hombre
+            - mujer
+          example: mujer
+        birth_date:
+          type: string
+          format: date
+          description: Fecha de nacimiento
+          pattern: YYYY-MM-DD
+          example: '1970-01-01'
+        location:
+          $ref: '#/components/schemas/Location'
+        rating:
+          readOnly: true
+          type: number
+          description: Valoración
+          minimum: 0
+          maximum: 5
+          example: 2.75
+        picture:
+          oneOf:
+            - $ref: '#/components/schemas/PictureReference'
+            - $ref: '#/components/schemas/Picture'
+      description: Representación de un Usuario.
+  examples:
+    '400':
+      summary: Bad Request
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 400
+        error: Bad Request
+        message: Application unspecified error.
+    '401':
+      summary: Unauthorized
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 401
+        error: Unauthorized
+        message: The user credentials does not exist.
+    '402':
+      summary: Forbidden
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 402
+        error: Forbidden
+        message: The user doesn't have enough permissions.
+    '404':
+      summary: Not Found
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 404
+        error: Not Found
+        message: The resource with given URI doesn't exist.
+    '405':
+      summary: Method Not Allowed
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 405
+        error: Method Not Allowed
+        message: The resource with given URI doesn't allow this HTTP method.
+    '409':
+      summary: Conflict
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 409
+        error: Conflict
+        message: The operation has been rejected due to current resource state.
+    '412':
+      summary: Precondition Failed
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 412
+        error: Precondition Failed
+        message: One or more preconditions are not met.
+    '415':
+      summary: Unsupported Media
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 415
+        error: Unsupported Media
+        message: Multimedia format is not supported by server.
+    '500':
+      summary: Internal Server Error
+      value:
+        timestamp: '2019-03-29T16:44:38.629+0000'
+        status: 500
+        error: Internal Server Error
+        message: The API server is undergoing internal problems.
